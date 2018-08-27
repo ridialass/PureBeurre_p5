@@ -1,0 +1,13 @@
+###########################
+### CATEGORY MANAGEMENT ###
+###########################
+Biscuits
+Chocolats
+Pains
+Jambons
+Volailles
+Huiles
+Saucisses
+Pizzas
+Cookies
+Ravioli

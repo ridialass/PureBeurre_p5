@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: Utf-8 -*
+#! /usr/bin/env python3
+# coding: utf-8
 
 import requests
 import records
@@ -8,7 +8,8 @@ import config as c
 
 
 class DatabaseFeeder:
-    """This class will integrate the results of the fetch_data
+    """
+    This class will integrate the results of the fetch_data
     function into the different tables created in the database :
     product, category, store, product_store, product_category.
     """
@@ -20,12 +21,13 @@ class DatabaseFeeder:
         self.db_name = c.DB_NAME
 
         self.db = records.Database('mysql://{}:{}@localhost/{}?charset=utf8mb4'
-                                   .format(self.db_username, self.db_password,self.db_name))
-        # self.db.query('USE {}'.format(self.db_name))
+                                   .format(self.db_username, self.db_password,
+                                           self.db_name))
         self.products = []
 
     def fetch_data(self):
-        """This functions collects data from the Open Food Facts API
+        """
+        This functions collects data from the Open Food Facts API
         according to the criteria.
         """
         for category in c.CATEGORIES_TO_USE:
@@ -48,7 +50,8 @@ class DatabaseFeeder:
                 self.products.extend(data["products"])
 
     def clean_tables(self):
-        """A function to erase the tables'data, just in case
+        """
+        A function to erase the tables'data, just in case
         they are already filled.
         """
         self.db.query("""DELETE FROM product_category;""")
@@ -59,7 +62,8 @@ class DatabaseFeeder:
         self.db.query("""DELETE FROM favorite;""")
 
     def product_invalid(self, product):
-        """This function checks if a product has all the informations
+        """
+        This function checks if a product has all the informations
         required. If no, it is invalid. If yes, it is valid and can
         be saved in the database.
         """
@@ -71,7 +75,8 @@ class DatabaseFeeder:
         return False
 
     def feed_products(self):
-        """The function is responsible of feeding the
+        """
+        The function is responsible of feeding the
         table "product" with the API's results.
         """
         for product in self.products:
@@ -91,7 +96,8 @@ class DatabaseFeeder:
                 self.feed_stores(product)
 
     def clean_categories(self, categories):
-        """The function is used to clean the categories : it makes sure
+        """
+        The function is used to clean the categories : it makes sure
         all of them are written in lower case, and whitout spaces.
         """
         categories = categories.lower()
@@ -99,7 +105,8 @@ class DatabaseFeeder:
         return categories
 
     def feed_categories(self, product):
-        """The function is responsible of feeding the
+        """
+        The function is responsible of feeding the
         table "category" with the API's results.
         """
         categories = self.clean_categories(product["categories"])
@@ -107,11 +114,12 @@ class DatabaseFeeder:
             self.db.query("""INSERT INTO category (name)
                 VALUES (:name) ON DUPLICATE KEY
                 UPDATE name = :name;""",
-                name=category)
+                          name=category)
             self.feed_product_category(product, category)
 
     def clean_stores(self, stores):
-        """The function cleans the names of the stores :
+        """
+        The function cleans the names of the stores :
         they are all written in lower case without spaces.
         """
         stores = stores.lower()
@@ -155,3 +163,4 @@ if __name__ == "__main__":
     feeder.fetch_data()
     feeder.clean_tables()
     feeder.feed_products()
+
