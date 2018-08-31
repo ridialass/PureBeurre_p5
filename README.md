@@ -21,35 +21,35 @@ The software will analyse a database in order to compare and  find, some product
 ### Installation Guide
 
 #### 1. Create a virtualenv with python3
-```
+
 python -m virtualenv env
-```
+
 #### 2. Activate virtualenv with python3
-```
+
 .\Scripts\activate
-```
+
 #### 3. Install requirements
-```
+
 pip install -r requirements.txt
 
 #### 4. Edit config.py file
-```
+
 DB_USER = 'your_user_name'
 DB_PASS = 'your_password'
 DB_NAME = 'your_database_name'
-```
+
 #### 5. Create database
-```
+
 python db_creation.py
-```
+
 #### 6. Populate database with data from API
-```
+
 python db_populate_tables.py
-```
+
 #### 7. Start app
-```
+
 python client.py
-```
+
 
 ### How to use it:
 
