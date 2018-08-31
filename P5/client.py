@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 # coding: utf-8
+
 import config as c
 from request import ProdManager, FavManager, StoreManager, records
 

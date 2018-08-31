@@ -51,7 +51,7 @@ python db_populate_tables.py
 python client.py
 ```
 
-### Utilisation :
+### How to use it:
 
 At the launch of the program, two choices are available to the user:
 1. Choice 1:
@@ -66,3 +66,4 @@ If the user chooses the first category, the program asks him the following quest
 * Save the result in the database if wanted.
 
 If the user chooses the second category, it is returned to the database containing the foods he has saved in the favorites.
+
