@@ -14,7 +14,7 @@ class DatabaseCreator:
         self.db_name = DB_NAME
         self.db_username = DB_USER
         self.db_password = DB_PASS
-        self.db = records.Database('mysql://{}:{}@localhost'
+        self.db = records.Database('mysql+mysqlconnector://{}:{}@localhost/?charset=utf8mb4'
                                    .format(self.db_username, self.db_password))
 
     def create_database(self):
@@ -37,14 +37,14 @@ class DatabaseCreator:
     def create_category_table(self):
         """Creates a table linking a product with one or several categories."""
         self.db.query("""CREATE TABLE category (
-            id MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL UNIQUE
             )""")
 
     def create_store_table(self):
         """Creates a table linking a product with one or several store/s."""
         self.db.query("""CREATE TABLE store (
-            id MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL UNIQUE
             )""")
 
