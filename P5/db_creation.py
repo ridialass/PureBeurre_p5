@@ -19,8 +19,9 @@ class DatabaseCreator:
 
     def create_database(self):
         """ create database """
+        print("Database creation started, please wait...")
         self.db.query("DROP DATABASE IF EXISTS {};".format(self.db_name))
-        self.db.query("CREATE DATABASE {} CHARACTER SET 'utf8mb4'"
+        self.db.query("CREATE DATABASE {} CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'"
                       .format(self.db_name))
         self.db.query("USE {};".format(self.db_name))
 
@@ -32,21 +33,21 @@ class DatabaseCreator:
             brand VARCHAR(200) NOT NULL,
             url_link VARCHAR(255) NOT NULL,
             nutrition_grade_fr CHAR(1) NOT NULL
-            )""")
+            )ENGINE = INNODB""")
 
     def create_category_table(self):
         """Creates a table linking a product with one or several categories."""
         self.db.query("""CREATE TABLE category (
-            id MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(150) NOT NULL UNIQUE
-            )""")
+            )ENGINE=InnoDB;""")
 
     def create_store_table(self):
         """Creates a table linking a product with one or several store/s."""
         self.db.query("""CREATE TABLE store (
-            id MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(150) NOT NULL UNIQUE
-            )""")
+            )ENGINE=InnoDB;""")
 
     def create_product_category_table(self):
         """
@@ -54,10 +55,10 @@ class DatabaseCreator:
         related category/ies.
         """
         self.db.query("""CREATE TABLE product_category (
-            id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
             product_code BIGINT UNSIGNED REFERENCES product(code),
-            category_id MEDIUMINT UNSIGNED REFERENCES category(id)
-            )""")
+            category_id INT UNSIGNED REFERENCES category(id),
+            PRIMARY KEY (product_code, category_id)
+            )ENGINE=InnoDB;""")
 
     def create_product_store_table(self):
         """
@@ -65,10 +66,10 @@ class DatabaseCreator:
         and related store/s.
         """
         self.db.query("""CREATE TABLE product_store (
-            id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-            product_code BIGINT UNSIGNED REFERENCES product(code),
-            store_id MEDIUMINT UNSIGNED REFERENCES store(id)
-            )""")
+            product_code BIGINT(20) UNSIGNED REFERENCES product(code),
+            store_id INT UNSIGNED REFERENCES store(id),
+            PRIMARY KEY (product_code, store_id)
+            )ENGINE=InnoDB;""")
 
     def create_favorite_table(self):
         """
@@ -76,10 +77,10 @@ class DatabaseCreator:
         when the user wants to.
         """
         self.db.query("""CREATE TABLE favorite (
-            id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-            product_id BIGINT UNSIGNED REFERENCES product(code),
-            substitute_id BIGINT UNSIGNED REFERENCES product(code)
-            )""")
+            favorite_id BIGINT UNSIGNED REFERENCES product(code),
+            substitute_id BIGINT UNSIGNED REFERENCES product(code),
+            PRIMARY KEY (favorite_id, substitute_id)
+            )ENGINE=InnoDB;""")
 
     def create_tables(self):
         """
@@ -92,6 +93,7 @@ class DatabaseCreator:
         self.create_product_category_table()
         self.create_product_store_table()
         self.create_favorite_table()
+        print("Creation completed.")
 
     def add_contents_to_db(self):
         """ add data to the db using DbManagement class """
@@ -100,7 +102,7 @@ class DatabaseCreator:
         feeder.fetch_data()
         feeder.clean_tables()
         feeder.feed_products()
-        print("Feeding complete.")
+        print("Feeding completed.")
 
 
 def main():
@@ -109,7 +111,7 @@ def main():
     db_script = DatabaseCreator()
     db_script.create_database()
     db_script.create_tables()
-    db_script.add_contents_to_db()
+    # db_script.add_contents_to_db()
 
 if __name__ == '__main__':
     main()

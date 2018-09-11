@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import config as c
+from menu import Menu as menu
 from request import ProdManager, FavManager, StoreManager, records
 
 
@@ -19,11 +20,9 @@ class Client:
 
     def welcome_menu(self):
         """Method used to display the welcome menu."""
-        print("**********BIENVENUE*MENU**********\n")
-        print('Veuillez choisir une option et appuyez sur Entrée :\n')
-        print('Pour choisir un aliment à remplacer appuyer la touche: 1')
-        print('Pour retrouver mes substituts favoris appuyer la touche: 2')
-        print("Pour quitter l'application appuyer la touche: q\n")
+        title = 'bienvenue'
+        menu.menu_header(self, title)
+        menu.welcome(self)
         choix = input("Saisissez votre choix : ").strip().lower()
         if choix == "1":
             self.cat_menu()
@@ -38,13 +37,13 @@ class Client:
     def cat_menu(self):
         """Method used to display the list of several categories."""
         index_cat_list = []
-        print("\n**********CATEGORIE*MENU**********\n")
+        title = 'catégorie'
+        menu.menu_header(self, title)
         for i, cat in enumerate(c.CATEGORIES_TO_USE):
             print("{}: Catégorie des {}.".format(i + 1, cat))
             index_cat_list.append(str(i + 1))
-        print('\nSélectionnez la catégorie en entrant son numéro :')
-        print("Pour quitter l'application appuyer la touche: q")
-        print('Pour revenir au menu principal appuyer la touche: m\n')
+        menu.cat_options(self)
+        menu.menu_footer(self)
         choix_cat = input("Saisissez votre choix : ").strip().lower()
         if choix_cat in index_cat_list:
             cat_index = int(choix_cat)
@@ -52,6 +51,8 @@ class Client:
         elif choix_cat == "q":
             self.quit()
         elif choix_cat == "m":
+            self.welcome_menu()
+        elif choix_cat == "r":
             self.welcome_menu()
         else:
             print("Choix non pris en charge")
@@ -62,14 +63,14 @@ class Client:
         index_prod_list = []
         prod_code_list = []
         manager = ProdManager(self.db)
-        print("\n**********PRODUITS*A*REMPLACER*MENU**********\n")
+        title = 'produit*à*remplacer'
+        menu.menu_header(self, title)
         for i, prod in enumerate(manager.lesshealthy_product_by_cat(category)):
             print("{}=> {}.".format(i + 1, prod['product_name']))
             index_prod_list.append(str(i + 1))
             prod_code_list.append(prod['code'])
-        print('\nSélectionnez le produit à remplacer en entrant le numéro.')
-        print("Pour quitter l'application appuyer la touche: q")
-        print('Pour revenir au menu principal appuyer la touche: m\n')
+        menu.product_options(self)
+        menu.menu_footer(self)
         choix = input("Saisissez votre choix : ").strip().lower()
         if choix in index_prod_list:
             prod_index = int(choix)
@@ -79,6 +80,8 @@ class Client:
             self.quit()
         elif choix == "m":
             self.welcome_menu()
+        elif choix == "r":
+            self.cat_menu()
         else:
             print("Choix non pris en charge")
             self.prod_menu(category)
@@ -88,7 +91,8 @@ class Client:
         index_subs_list = []
         subs_code_list = []
         manager = ProdManager(self.db)
-        print("\n**********PRODUITS*SUBSTITUTS*MENU**********\n")
+        title = 'produits*de*substitution'
+        menu.menu_header(self, title)
         print("Nous vous proposons ces produits de substitution, "
               "lequel choisissez-vous ?\n")
         for i, prod in enumerate(manager.healthy_product_by_cat(category)):
@@ -97,17 +101,18 @@ class Client:
                           prod['nutrition_grade_fr'].capitalize()))
             index_subs_list.append(str(i + 1))
             subs_code_list.append(prod['code'])
-        print('\nSélectionnez le produit choisi en entrant son numéro :')
-        print("Pour quitter l'application appuyer la touche: q")
-        print('Pour revenir au menu principal appuyer la touche: m\n')
+        menu.sub_options(self)
+        menu.menu_footer(self)
         choix = input("Saisissez votre choix : ").strip().lower()
         if choix in index_subs_list:
             subs_index = int(choix)
-            self.detail_prod_menu(subs_code_list[subs_index - 1])
+            self.detail_prod_menu(subs_code_list[subs_index - 1], category)
         elif choix == "q":
             self.quit()
         elif choix == "m":
             self.welcome_menu()
+        elif choix == "r":
+            self.prod_menu(category)
         else:
             print("Choix non pris en charge")
             self.subs_menu(category)
@@ -115,16 +120,18 @@ class Client:
     def addfav_menu(self, product_code, sub_code):
         """Method used to save a new favorite product."""
         manager = FavManager(self.db)
-        print("\n**********AJOUT*FAVORI*MENU**********\n")
+        title = 'ajout*de*favori'
+        menu.menu_header(self, title)
         manager.addfav_insert(product_code, sub_code)
         print("Votre choix a été sauvegardé dans les favoris.\n")
         self.favs_menu()
 
-    def detail_prod_menu(self, product_code):
+    def detail_prod_menu(self, product_code, category):
         """Method used to display a product's details."""
         p_manager = ProdManager(self.db)
         s_manager = StoreManager(self.db)
-        print("\n**********DETAILS*PRODUIT*MENU**********\n")
+        title = 'details*du*produit'
+        menu.menu_header(self, title)
         print("Que souhaitez-vous faire du produit ?\n")
         for i, prod in enumerate(p_manager.sub_description(product_code)):
             print(" Produit: {}\n Code_barre: {}\n Marque: {}\n Lien_web: {}\n"
@@ -134,10 +141,8 @@ class Client:
                           prod['nutrition_grade_fr'].capitalize()))
             for i, score in enumerate(s_manager.get_store(product_code)):
                 print(" Magasin de vente: {}".format(score['name']))
-        print('\nEnregister le produit dans les favoris en'
-              ' appuyant sur la touche: s')
-        print("Pour quitter l'application appuyer la touche: q")
-        print('Pour revenir au menu principal appuyer la touche: m\n')
+        menu.detail_prod_options(self)
+        menu.menu_footer(self)
         choix = input("Saisissez votre choix : ").strip().lower()
         if choix == "s":
             self.addfav_menu(product_code, self.prod_code)
@@ -145,6 +150,8 @@ class Client:
             self.quit()
         elif choix == "m":
             self.welcome_menu()
+        elif choix == "r":
+            self.subs_menu(category)
         else:
             print("Choix non pris en charge")
             self.detail_prod_menu(product_code)
@@ -154,16 +161,16 @@ class Client:
         index_favs_list = []
         favs_code_list = []
         manager = FavManager(self.db)
-        print("\n**********LISTE*FAVORIS*MENU**********\n")
+        title = 'liste*de*mes*favoris'
+        menu.menu_header(self, title)
         for i, fav in enumerate(manager.get_favs_list()):
             print("{}=> {} remplace le produit : {}"
                   .format(i + 1, fav['origin_prod_name'],
                           fav['sub_prod_name']))
             index_favs_list.append(str(i + 1))
             favs_code_list.append(fav['origin_code'])
-        print("\nSélectionnez un des favoris en entrant son numéro :")
-        print("Pour quitter l'application appuyer la touche: q")
-        print('Pour revenir au menu principal appuyer la touche: m\n')
+        menu.favorite_options(self)
+        menu.menu_footer(self)
         choix = input("Saisissez votre choix : ").strip().lower()
         if choix in index_favs_list:
             favs_index = int(choix)
@@ -172,6 +179,8 @@ class Client:
             self.quit()
         elif choix == "m":
             self.welcome_menu()
+        elif choix == "r":
+            self.welcome_menu()
         else:
             print("Choix non pris en charge")
             self.favs_menu()
@@ -179,7 +188,8 @@ class Client:
     def dellfav_menu(self, product_code):
         """Method used to delete a product from favorites list."""
         manager = FavManager(self.db)
-        print("\n**********SUPPRIME*MENU**********\n")
+        title = 'suppression*de*favoris'
+        menu.menu_header(self, title)
         manager.dellfav_from_list(product_code)
         print('Votre choix a été supprimé des favoris.\n')
         self.favs_menu()
@@ -188,7 +198,8 @@ class Client:
         """Method used to display the slected favorite's details."""
         p_manager = ProdManager(self.db)
         s_manager = StoreManager(self.db)
-        print("\n**********DETAIL*FAVORI*MENU**********\n")
+        title = 'details*du*favori'
+        menu.menu_header(self, title)
         print("Que souhaitez-vous faire de ce favori ?\n")
         for i, prod in enumerate(p_manager.sub_description(product_code)):
             print(" Produit: {}\n Code_barre: {}\n Marque: {}\n Lien_web: {}\n"
@@ -198,10 +209,8 @@ class Client:
                           prod['nutrition_grade_fr'].capitalize()))
             for i, score in enumerate(s_manager.get_store(product_code)):
                 print(" Magasin de vente: {}".format(score['name']))
-        print('\nSupprimer le favori en appuyant sur la touche: x')
-        print("Revenir à la liste des favoris en appuyant sur la touche: r")
-        print("Pour quitter l'application appuyer la touche: q")
-        print('Pour revenir au menu principal appuyer la touche: m\n')
+        menu.detail_fav_options(self)
+        menu.menu_footer(self)
         choix = input("Saisissez votre choix : ").strip().lower()
         if choix == "x":
             self.dellfav_menu(product_code)
