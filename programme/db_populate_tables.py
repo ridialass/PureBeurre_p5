@@ -96,7 +96,7 @@ class DatabaseFeeder:
                     url_link=product["url"],
                     nutrition_grade_fr=product["nutrition_grade_fr"])
                 self.feed_categories(product)
-                #self.feed_stores(product)
+                self.feed_stores(product)
 
     def clean_categories(self, categories):
         """
