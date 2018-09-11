@@ -38,15 +38,11 @@ DB_USER = 'your_user_name'
 DB_PASS = 'your_password'
 DB_NAME = 'your_database_name'
 ```
-#### 5. Create database
+#### 5. Create and populating database:
 ```
 python db_creation.py
 ```
-#### 6. Populate database with data from API
-```
-python db_populate_tables.py
-```
-#### 7. Start app
+#### 6. Start application:
 ```
 python client.py
 ```

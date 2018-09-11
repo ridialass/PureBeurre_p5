@@ -8,20 +8,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema ratatouille_db
+-- Schema p5_bd
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `ratatouille_db` ;
+DROP SCHEMA IF EXISTS `p5_bd` ;
 
 -- -----------------------------------------------------
--- Schema ratatouille_db
+-- Schema p5_bd
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `ratatouille_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
-USE `ratatouille_db` ;
+CREATE SCHEMA IF NOT EXISTS `p5_bd` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
+USE `p5_bd` ;
 
 -- -----------------------------------------------------
--- Table `ratatouille_db`.`product`
+-- Table `p5_bd`.`product`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ratatouille_db`.`product` (
+CREATE TABLE IF NOT EXISTS `p5_bd`.`product` (
   `code` BIGINT(20) UNSIGNED NOT NULL,
   `product_name` VARCHAR(200) NOT NULL,
   `brand` VARCHAR(200) NOT NULL,
@@ -32,20 +32,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ratatouille_db`.`category`
+-- Table `p5_bd`.`category`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ratatouille_db`.`category` (
+CREATE TABLE IF NOT EXISTS `p5_bd`.`category` (
   `id` MEDIUMINT(10) UNSIGNED NOT NULL,
   `name` VARCHAR(150) NOT NULL,
   PRIMARY KEY (`id`));
 
-CREATE UNIQUE INDEX `name_UNIQUE` ON `ratatouille_db`.`category` (`name` ASC);
+CREATE UNIQUE INDEX `name_UNIQUE` ON `p5_bd`.`category` (`name` ASC);
 
 
 -- -----------------------------------------------------
--- Table `ratatouille_db`.`store`
+-- Table `p5_bd`.`store`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ratatouille_db`.`store` (
+CREATE TABLE IF NOT EXISTS `p5_bd`.`store` (
   `id` MEDIUMINT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(150) NOT NULL,
   PRIMARY KEY (`id`))
@@ -53,75 +53,75 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ratatouille_db`.`product_category`
+-- Table `p5_bd`.`product_category`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ratatouille_db`.`product_category` (
+CREATE TABLE IF NOT EXISTS `p5_bd`.`product_category` (
   `category_id` MEDIUMINT(10) UNSIGNED NOT NULL,
   `product_code` BIGINT(20) UNSIGNED NOT NULL,
   PRIMARY KEY (`category_id`, `product_code`),
   CONSTRAINT `fk_category_has_product_category`
     FOREIGN KEY (`category_id`)
-    REFERENCES `ratatouille_db`.`category` (`id`)
+    REFERENCES `p5_bd`.`category` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_category_has_product_product1`
     FOREIGN KEY (`product_code`)
-    REFERENCES `ratatouille_db`.`product` (`code`)
+    REFERENCES `p5_bd`.`product` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE INDEX `fk_category_has_product_product1_idx` ON `ratatouille_db`.`product_category` (`product_code` ASC);
+CREATE INDEX `fk_category_has_product_product1_idx` ON `p5_bd`.`product_category` (`product_code` ASC);
 
-CREATE INDEX `fk_category_has_product_category_idx` ON `ratatouille_db`.`product_category` (`category_id` ASC);
+CREATE INDEX `fk_category_has_product_category_idx` ON `p5_bd`.`product_category` (`category_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `ratatouille_db`.`product_store`
+-- Table `p5_bd`.`product_store`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ratatouille_db`.`product_store` (
+CREATE TABLE IF NOT EXISTS `p5_bd`.`product_store` (
   `product_code` BIGINT(20) UNSIGNED NOT NULL,
   `store_id` MEDIUMINT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`product_code`, `store_id`),
   CONSTRAINT `fk_product_has_store_product1`
     FOREIGN KEY (`product_code`)
-    REFERENCES `ratatouille_db`.`product` (`code`)
+    REFERENCES `p5_bd`.`product` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_product_has_store_store1`
     FOREIGN KEY (`store_id`)
-    REFERENCES `ratatouille_db`.`store` (`id`)
+    REFERENCES `p5_bd`.`store` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_product_has_store_store1_idx` ON `ratatouille_db`.`product_store` (`store_id` ASC);
+CREATE INDEX `fk_product_has_store_store1_idx` ON `p5_bd`.`product_store` (`store_id` ASC);
 
-CREATE INDEX `fk_product_has_store_product1_idx` ON `ratatouille_db`.`product_store` (`product_code` ASC);
+CREATE INDEX `fk_product_has_store_product1_idx` ON `p5_bd`.`product_store` (`product_code` ASC);
 
 
 -- -----------------------------------------------------
--- Table `ratatouille_db`.`favoris`
+-- Table `p5_bd`.`favoris`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ratatouille_db`.`favoris` (
+CREATE TABLE IF NOT EXISTS `p5_bd`.`favoris` (
   `id` INT UNSIGNED NULL AUTO_INCREMENT,
   `product_id` BIGINT(20) UNSIGNED NOT NULL,
   `substitute_id` BIGINT(20) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_favoris_product1`
     FOREIGN KEY (`product_id`)
-    REFERENCES `ratatouille_db`.`product` (`code`)
+    REFERENCES `p5_bd`.`product` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_favoris_product2`
     FOREIGN KEY (`substitute_id`)
-    REFERENCES `ratatouille_db`.`product` (`code`)
+    REFERENCES `p5_bd`.`product` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_favoris_product1_idx` ON `ratatouille_db`.`favoris` (`product_id` ASC);
+CREATE INDEX `fk_favoris_product1_idx` ON `p5_bd`.`favoris` (`product_id` ASC);
 
-CREATE INDEX `fk_favoris_product2_idx` ON `ratatouille_db`.`favoris` (`substitute_id` ASC);
+CREATE INDEX `fk_favoris_product2_idx` ON `p5_bd`.`favoris` (`substitute_id` ASC);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 # coding: utf-8
+"""Menu class in order to have less print sentences on client."""
 
 
 class Menu:
@@ -11,7 +12,7 @@ class Menu:
 
     def menu_header(self, title):
         """Menu header."""
-        print("**********{}*MENU**********\n".format(title.upper()))
+        print("\n**********MENU:*{}**********\n".format(title.upper()))
 
     def menu_footer(self):
         """Menu footer."""
@@ -40,7 +41,7 @@ class Menu:
 
     def detail_prod_options(self):
         """Detail product."""
-        print('\nEnregister le produit dans les favoris en appuyant sur la touche: s')
+        print('\nSauvegarder le produit dans favoris en appuyant sur la touche: s')
 
     def favorite_options(self):
         """Favorite."""

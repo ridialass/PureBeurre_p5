@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 # coding: utf-8
-# Config file
+"""Configuration file for the constants."""
+
 DB_USER = 'p5_user'
 DB_PASS = '123456'
 DB_NAME = 'p5_db'
@@ -22,6 +23,3 @@ LESSHEALTHY_GRADES = ["c", "d", "e"]
 LIMIT_PRODUCTS = 500
 LIMIT_BAD_PRODUCTS = 20
 LIMIT_SUBSTITUDE_FOOD = 5
-
-DATABASE_URL = "mysql+mysqlconnector://root:VQW9xu2NJbTM3NYq@localhost/off_db?charset=utf8mb4"
-#DATABASE_NAME = "pureBeure_db"

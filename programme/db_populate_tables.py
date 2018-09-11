@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 # coding: utf-8
+"""Module for collecting data from OenFood's API to add in database."""
 
 import requests
 import records
@@ -76,7 +77,6 @@ class DatabaseFeeder:
                 return True
         return False
 
-
     def feed_products(self):
         """
         The function is responsible of feeding the
@@ -136,11 +136,12 @@ class DatabaseFeeder:
             self.db.query("""INSERT INTO store (name)
                 VALUES (:name)
                 ON DUPLICATE KEY
-                UPDATE name = :name;""",name=store)
+                UPDATE name = :name;""", name=store)
             self.feed_product_store(product, store)
 
     def feed_product_store(self, product, store):
-        """Feeds the table product_store according
+        """
+        Feeds the table product_store according
         to the data in product and store tables.
         """
         self.db.query("""INSERT INTO product_store (product_code, store_id)
@@ -149,7 +150,8 @@ class DatabaseFeeder:
             WHERE name = :store));""", code=product['code'], store=store)
 
     def feed_product_category(self, product, category):
-        """Feeds the table product_category according
+        """
+        Feed the table product_category according
         to the data in product and category tables.
         """
         self.db.query("""INSERT INTO product_category
@@ -157,7 +159,7 @@ class DatabaseFeeder:
             VALUES (:code, (
             SELECT id FROM category
             WHERE name = :category));""", code=product['code'],
-            category=category)
+                      category=category)
 
 
 # Tests:
@@ -166,4 +168,3 @@ if __name__ == "__main__":
     feeder.fetch_data()
     feeder.clean_tables()
     feeder.feed_products()
-
