@@ -14,7 +14,7 @@ class DatabaseCreator:
         self.db_name = DB_NAME
         self.db_username = DB_USER
         self.db_password = DB_PASS
-        self.db = records.Database('mysql://{}:{}@localhost'
+        self.db = records.Database('mysql+mysqlconnector://{}:{}@localhost/?charset=utf8mb4'
                                    .format(self.db_username, self.db_password))
 
     def create_database(self):
@@ -29,8 +29,8 @@ class DatabaseCreator:
         """Create a table listing the products to be added to the database."""
         self.db.query("""CREATE TABLE product (
             code BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY,
-            product_name VARCHAR(200) NOT NULL,
-            brand VARCHAR(200) NOT NULL,
+            product_name VARCHAR(255) NOT NULL,
+            brand VARCHAR(255) NOT NULL,
             url_link VARCHAR(255) NOT NULL,
             nutrition_grade_fr CHAR(1) NOT NULL
             )ENGINE = INNODB""")
@@ -39,15 +39,25 @@ class DatabaseCreator:
         """Creates a table linking a product with one or several categories."""
         self.db.query("""CREATE TABLE category (
             id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+<<<<<<< HEAD
             name VARCHAR(150) NOT NULL UNIQUE
             )ENGINE=InnoDB;""")
+=======
+            name VARCHAR(255) NOT NULL UNIQUE
+            )""")
+>>>>>>> c66bdf46c94424ee8159a119515d544269bfb167
 
     def create_store_table(self):
         """Creates a table linking a product with one or several store/s."""
         self.db.query("""CREATE TABLE store (
             id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+<<<<<<< HEAD
             name VARCHAR(150) NOT NULL UNIQUE
             )ENGINE=InnoDB;""")
+=======
+            name VARCHAR(255) NOT NULL UNIQUE
+            )""")
+>>>>>>> c66bdf46c94424ee8159a119515d544269bfb167
 
     def create_product_category_table(self):
         """

@@ -72,7 +72,10 @@ class DatabaseFeeder:
         for key in keys:
             if key not in product or not product[key]:
                 return True
+            if len(str(product[key])) > 255:
+                return True
         return False
+
 
     def feed_products(self):
         """
