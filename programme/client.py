@@ -227,7 +227,11 @@ class Client:
 
 def main():
     """Main entry point of the application."""
-    db = records.Database(c.DATABASE_URL)
+    db_username = c.DB_USER
+    db_password = c.DB_PASS
+    db_name = c.DB_NAME
+    db = records.Database('mysql+mysqlconnector://{}:{}@localhost:6606/{}?charset=utf8mb4'
+                               .format(db_username, db_password, db_name))
     app = Client(db)
     app.welcome_menu()
 

@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
 # coding: utf-8
 # Config file
-DB_USER = 'root'
-DB_PASS = 'VQW9xu2NJbTM3NYq'
-DB_NAME = 'off_db'
+DB_USER = 'p5_user'
+DB_PASS = '123456'
+DB_NAME = 'p5_db'
 CATEGORIES_TO_USE = {
     "Poissons": "%poisson%",
     "Laits": "%lait%",

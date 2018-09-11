@@ -14,14 +14,13 @@ class DatabaseCreator:
         self.db_name = DB_NAME
         self.db_username = DB_USER
         self.db_password = DB_PASS
-        self.db = records.Database('mysql+mysqlconnector://{}:{}@localhost/?charset=utf8mb4'
+        self.db = records.Database('mysql+mysqlconnector://{}:{}@localhost:6606/?charset=utf8mb4'
                                    .format(self.db_username, self.db_password))
 
     def create_database(self):
         """ create database """
-        print("Database creation started, please wait...")
         self.db.query("DROP DATABASE IF EXISTS {};".format(self.db_name))
-        self.db.query("CREATE DATABASE {} CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'"
+        self.db.query("CREATE DATABASE {} CHARACTER SET 'utf8mb4'"
                       .format(self.db_name))
         self.db.query("USE {};".format(self.db_name))
 
@@ -33,31 +32,21 @@ class DatabaseCreator:
             brand VARCHAR(255) NOT NULL,
             url_link VARCHAR(255) NOT NULL,
             nutrition_grade_fr CHAR(1) NOT NULL
-            )ENGINE = INNODB""")
+            )""")
 
     def create_category_table(self):
         """Creates a table linking a product with one or several categories."""
         self.db.query("""CREATE TABLE category (
             id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-<<<<<<< HEAD
-            name VARCHAR(150) NOT NULL UNIQUE
-            )ENGINE=InnoDB;""")
-=======
             name VARCHAR(255) NOT NULL UNIQUE
             )""")
->>>>>>> c66bdf46c94424ee8159a119515d544269bfb167
 
     def create_store_table(self):
         """Creates a table linking a product with one or several store/s."""
         self.db.query("""CREATE TABLE store (
             id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-<<<<<<< HEAD
-            name VARCHAR(150) NOT NULL UNIQUE
-            )ENGINE=InnoDB;""")
-=======
             name VARCHAR(255) NOT NULL UNIQUE
             )""")
->>>>>>> c66bdf46c94424ee8159a119515d544269bfb167
 
     def create_product_category_table(self):
         """
@@ -65,10 +54,10 @@ class DatabaseCreator:
         related category/ies.
         """
         self.db.query("""CREATE TABLE product_category (
+            id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
             product_code BIGINT UNSIGNED REFERENCES product(code),
-            category_id INT UNSIGNED REFERENCES category(id),
-            PRIMARY KEY (product_code, category_id)
-            )ENGINE=InnoDB;""")
+            category_id MEDIUMINT UNSIGNED REFERENCES category(id)
+            )""")
 
     def create_product_store_table(self):
         """
@@ -76,10 +65,10 @@ class DatabaseCreator:
         and related store/s.
         """
         self.db.query("""CREATE TABLE product_store (
-            product_code BIGINT(20) UNSIGNED REFERENCES product(code),
-            store_id INT UNSIGNED REFERENCES store(id),
-            PRIMARY KEY (product_code, store_id)
-            )ENGINE=InnoDB;""")
+            id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+            product_code BIGINT UNSIGNED REFERENCES product(code),
+            store_id MEDIUMINT UNSIGNED REFERENCES store(id)
+            )""")
 
     def create_favorite_table(self):
         """
@@ -87,10 +76,10 @@ class DatabaseCreator:
         when the user wants to.
         """
         self.db.query("""CREATE TABLE favorite (
-            favorite_id BIGINT UNSIGNED REFERENCES product(code),
-            substitute_id BIGINT UNSIGNED REFERENCES product(code),
-            PRIMARY KEY (favorite_id, substitute_id)
-            )ENGINE=InnoDB;""")
+            id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+            product_id BIGINT UNSIGNED REFERENCES product(code),
+            substitute_id BIGINT UNSIGNED REFERENCES product(code)
+            )""")
 
     def create_tables(self):
         """
@@ -103,25 +92,25 @@ class DatabaseCreator:
         self.create_product_category_table()
         self.create_product_store_table()
         self.create_favorite_table()
-        print("Creation completed.")
 
     def add_contents_to_db(self):
-        """ add data to the db using DbManagement class """
-        print("Database feeding started, please wait...")
+        """Add data to the db using DbManagement class."""
         feeder = DatabaseFeeder()
         feeder.fetch_data()
         feeder.clean_tables()
         feeder.feed_products()
-        print("Feeding completed.")
 
 
 def main():
     """Entry point of the module."""
-
+    print("Database creation started, please wait...")
     db_script = DatabaseCreator()
     db_script.create_database()
     db_script.create_tables()
-    # db_script.add_contents_to_db()
+    print("Creation completed.")
+    print("Database feeding started, please wait...")
+    db_script.add_contents_to_db()
+    print("Feeding completed.")
 
 if __name__ == '__main__':
     main()

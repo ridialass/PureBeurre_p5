@@ -20,7 +20,7 @@ class DatabaseFeeder:
         self.db_password = c.DB_PASS
         self.db_name = c.DB_NAME
 
-        self.db = records.Database('mysql://{}:{}@localhost/{}?charset=utf8mb4'
+        self.db = records.Database('mysql+mysqlconnector://{}:{}@localhost:6606/{}?charset=utf8mb4'
                                    .format(self.db_username, self.db_password,
                                            self.db_name))
         self.products = []
@@ -96,7 +96,7 @@ class DatabaseFeeder:
                     url_link=product["url"],
                     nutrition_grade_fr=product["nutrition_grade_fr"])
                 self.feed_categories(product)
-                self.feed_stores(product)
+                #self.feed_stores(product)
 
     def clean_categories(self, categories):
         """
