@@ -15,7 +15,7 @@ class DatabaseCreator:
         self.db_name = DB_NAME
         self.db_username = DB_USER
         self.db_password = DB_PASS
-        self.db = records.Database('mysql+mysqlconnector://{}:{}@localhost:6606/?charset=utf8mb4'
+        self.db = records.Database('mysql+mysqlconnector://{}:{}@localhost/?charset=utf8mb4'
                                    .format(self.db_username, self.db_password))
 
     def create_database(self):
