@@ -3,7 +3,7 @@
 """Configuration file for the constants."""
 
 DB_USER = 'p5_user'
-DB_PASS = '123456'
+DB_PASS = 'p5_password'
 DB_NAME = 'p5_db'
 CATEGORIES_TO_USE = {
     "Poissons": "%poisson%",
